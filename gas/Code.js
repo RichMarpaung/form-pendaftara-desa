@@ -26,7 +26,6 @@ const SHEET_HEADERS = [
 ];
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
-const PHONE_REGEX = /^(?:\+62|62|0)[2-9][0-9]{7,12}$/;
 
 /**
  * Endpoint GET untuk memverifikasi status aktif Web App.
@@ -128,19 +127,19 @@ function validatePayload_(payload) {
   const kecamatan = sanitizeText_(payload.kecamatan);
   const namaDesa = sanitizeText_(payload.namaDesa);
   const kepalaDesa = sanitizeText_(payload.kepalaDesa);
-  const hpKepalaDesa = sanitizePhone_(payload.hpKepalaDesa);
+  const hpKepalaDesa = sanitizeText_(payload.hpKepalaDesa);
   const alamatKantor = sanitizeText_(payload.alamatKantor);
   const emailDesa = sanitizeText_(payload.emailDesa);
   const namaPendamping = sanitizeText_(payload.namaPendamping);
-  const hpPendamping = sanitizePhone_(payload.hpPendamping);
+  const hpPendamping = sanitizeText_(payload.hpPendamping);
   const namaOperator = sanitizeText_(payload.namaOperator);
-  const hpOperator = sanitizePhone_(payload.hpOperator);
+  const hpOperator = sanitizeText_(payload.hpOperator);
 
   if (!kecamatan) throw new Error('Kecamatan wajib diisi.');
   if (!namaDesa) throw new Error('Nama Desa wajib diisi.');
   if (!kepalaDesa) throw new Error('Nama Kepala Desa wajib diisi.');
-  if (!hpKepalaDesa || !PHONE_REGEX.test(hpKepalaDesa)) {
-    throw new Error('Format No. HP Kepala Desa tidak valid.');
+  if (!hpKepalaDesa) {
+    throw new Error('No. HP Kepala Desa wajib diisi.');
   }
   if (!alamatKantor) throw new Error('Alamat Kantor Desa wajib diisi.');
   if (!emailDesa || !EMAIL_REGEX.test(emailDesa)) {
@@ -149,14 +148,14 @@ function validatePayload_(payload) {
   if (!namaPendamping) {
     throw new Error('Nama Pendamping (Sekretaris) wajib diisi.');
   }
-  if (!hpPendamping || !PHONE_REGEX.test(hpPendamping)) {
-    throw new Error('Format No. HP Pendamping (Sekretaris) tidak valid.');
+  if (!hpPendamping) {
+    throw new Error('No. HP Pendamping (Sekretaris) wajib diisi.');
   }
   if (!namaOperator) {
     throw new Error('Nama Operator wajib diisi.');
   }
-  if (!hpOperator || !PHONE_REGEX.test(hpOperator)) {
-    throw new Error('Format No. HP Operator tidak valid.');
+  if (!hpOperator) {
+    throw new Error('No. HP Operator wajib diisi.');
   }
 
   const file = payload.file;
@@ -287,10 +286,6 @@ function normalizeMimeType_(mimeType, fileName) {
 
 function sanitizeText_(value) {
   return typeof value === 'string' ? value.trim() : '';
-}
-
-function sanitizePhone_(value) {
-  return typeof value === 'string' ? value.trim().replace(/[\s\-().]/g, '') : '';
 }
 
 function formatPhoneForSheet_(phone) {

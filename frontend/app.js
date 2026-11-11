@@ -5,7 +5,7 @@
  * Ganti nilai WEBHOOK_URL dengan URL Web App hasil deployment Google Apps Script.
  */
 const APP_CONFIG = {
-  WEBHOOK_URL: 'https://script.google.com/macros/s/AKfycbxa8gjBA33s9U4Oo92kYvOOcy3JEDsO-crrFVghQsJuOv8xUpvQJ-MgsQhQzR2M7q6k/exec',
+  WEBHOOK_URL: 'https://script.google.com/macros/s/AKfycbzIb5XIqJA4IG4cH19H2VJ0-BMTbO5p6FLMROlnRwltZAtr-7dwMwPKCCyEK2BeTATm/exec',
   MAX_FILE_SIZE_BYTES: 10 * 1024 * 1024, // 10 MB
   ALLOWED_EXTENSIONS: ['jpg', 'jpeg', 'png', 'pdf'],
   ALLOWED_MIME_TYPES: ['image/jpeg', 'image/jpg', 'image/png', 'application/pdf'],
@@ -83,7 +83,6 @@ const WILAYAH_MAMUJU_TENGAH = {
 };
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
-const PHONE_PATTERN = /^(?:\+62|62|0)[2-9][0-9]{7,12}$/;
 
 const PHONE_FIELDS = [
   { key: 'hpKepalaDesa', label: 'No. HP Kepala Desa' },
@@ -210,18 +209,11 @@ function bindEvents() {
     }
   });
 
-  PHONE_FIELDS.forEach(({ key, label }) => {
+  PHONE_FIELDS.forEach(({ key }) => {
     const input = elements[key];
     input.addEventListener('input', () => {
-      const normalized = normalizePhone(input.value);
-      if (!normalized || PHONE_PATTERN.test(normalized)) {
+      if (input.value.trim().length > 0) {
         clearFieldError(key);
-      }
-    });
-    input.addEventListener('blur', () => {
-      const normalized = normalizePhone(input.value);
-      if (normalized && !PHONE_PATTERN.test(normalized)) {
-        setFieldError(key, `Format ${label} tidak valid. Gunakan angka 08... atau +628...`);
       }
     });
   });
@@ -409,10 +401,6 @@ function clearFieldError(fieldName) {
   }
 }
 
-function normalizePhone(rawValue) {
-  return rawValue.trim().replace(/[\s\-().]/g, '');
-}
-
 function clearAllFieldErrors() {
   [
     'kecamatan',
@@ -469,11 +457,11 @@ function validateFormFields() {
     );
   }
 
-  if (alamatKantor.length < 10) {
+  if (!alamatKantor) {
     markInvalid(
       'alamatKantor',
       elements.alamatKantor,
-      'Alamat Kantor Desa wajib diisi secara lengkap (minimal 10 karakter).'
+      'Alamat Kantor Desa wajib diisi.'
     );
   }
 
@@ -505,15 +493,8 @@ function validateFormFields() {
 
   PHONE_FIELDS.forEach(({ key, label }) => {
     const input = elements[key];
-    const normalized = normalizePhone(input.value);
-    if (!normalized) {
+    if (!input.value.trim()) {
       markInvalid(key, input, `${label} wajib diisi.`);
-    } else if (!PHONE_PATTERN.test(normalized)) {
-      markInvalid(
-        key,
-        input,
-        `Format ${label} tidak valid. Contoh: 081234567890`
-      );
     }
   });
 
@@ -742,13 +723,13 @@ async function handleFormSubmit(event) {
       kecamatan: submittedKecamatan,
       namaDesa: submittedDesa,
       kepalaDesa: elements.kepalaDesa.value.trim(),
-      hpKepalaDesa: normalizePhone(elements.hpKepalaDesa.value),
+      hpKepalaDesa: elements.hpKepalaDesa.value.trim(),
       alamatKantor: elements.alamatKantor.value.trim(),
       emailDesa: elements.emailDesa.value.trim(),
       namaPendamping: elements.namaPendamping.value.trim(),
-      hpPendamping: normalizePhone(elements.hpPendamping.value),
+      hpPendamping: elements.hpPendamping.value.trim(),
       namaOperator: elements.namaOperator.value.trim(),
-      hpOperator: normalizePhone(elements.hpOperator.value),
+      hpOperator: elements.hpOperator.value.trim(),
       file: {
         name: file.name,
         mimeType: resolveMimeType(file),
