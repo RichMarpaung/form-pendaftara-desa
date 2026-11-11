@@ -85,6 +85,49 @@
           aria-live="polite"
         ></div>
 
+        <div class="bank-info-card" aria-label="Informasi Rekening Tujuan Transfer">
+          <div class="bank-info-header">
+            <svg
+              class="bank-info-icon"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <rect x="2" y="5" width="20" height="14" rx="2" />
+              <line x1="2" y1="10" x2="22" y2="10" />
+            </svg>
+            <span>Rekening Tujuan Transfer</span>
+          </div>
+          <dl class="bank-info-list">
+            <div class="bank-info-row">
+              <dt>Bank Tujuan</dt>
+              <dd>Bank Sulselbar</dd>
+            </div>
+            <div class="bank-info-row">
+              <dt>Atas Nama</dt>
+              <dd>PT.TRI ALPHA TANNIEWA</dd>
+            </div>
+            <div class="bank-info-row">
+              <dt>No. Rekening</dt>
+              <dd class="account-number-group">
+                <span class="account-number" id="accountNumberText">1300030000008325</span>
+                <button
+                  type="button"
+                  id="copyAccountBtn"
+                  class="btn-copy-account"
+                  aria-label="Salin nomor rekening 1300030000008325"
+                >
+                  Salin
+                </button>
+              </dd>
+            </div>
+          </dl>
+        </div>
+
         <form id="registrationForm" novalidate>
           <!-- Bagian 1: Identitas Wilayah & Pemerintahan -->
           <fieldset class="form-section">

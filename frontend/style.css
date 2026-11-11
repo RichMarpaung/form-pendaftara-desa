@@ -384,6 +384,112 @@ body {
   background-color: var(--error-bg);
 }
 
+/* Bank Transfer Info Card */
+.bank-info-card {
+  margin-bottom: 24px;
+  padding: 16px 18px;
+  border-radius: var(--radius-md);
+  background-color: var(--brand-primary-soft);
+  border: 1px solid var(--brand-primary-border);
+}
+
+.bank-info-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--brand-primary);
+}
+
+.bank-info-icon {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+}
+
+.bank-info-list {
+  margin: 0;
+  display: grid;
+  gap: 8px;
+}
+
+.bank-info-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding-top: 8px;
+  border-top: 1px dashed rgba(15, 118, 110, 0.22);
+}
+
+.bank-info-row:first-child {
+  padding-top: 0;
+  border-top: 0;
+}
+
+.bank-info-row dt {
+  font-size: 0.86rem;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.bank-info-row dd {
+  margin: 0;
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  text-align: right;
+}
+
+.account-number-group {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.account-number {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--brand-primary);
+}
+
+.btn-copy-account {
+  padding: 5px 12px;
+  min-height: 30px;
+  font-family: inherit;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--brand-primary);
+  background-color: #ffffff;
+  border: 1px solid var(--brand-primary-border);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color var(--transition-fast),
+    border-color var(--transition-fast),
+    color var(--transition-fast);
+}
+
+.btn-copy-account:hover:not(:disabled) {
+  background-color: var(--brand-primary);
+  border-color: var(--brand-primary);
+  color: #ffffff;
+}
+
+.btn-copy-account.is-copied {
+  background-color: var(--success-bg);
+  border-color: var(--success-border);
+  color: var(--success-text);
+}
+
+.btn-copy-account:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
 /* File Dropzone */
 .dropzone {
   position: relative;
@@ -668,5 +774,15 @@ body {
 
   .btn-remove-file {
     width: 100%;
+  }
+
+  .bank-info-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2px;
+  }
+
+  .bank-info-row dd {
+    text-align: left;
   }
 }

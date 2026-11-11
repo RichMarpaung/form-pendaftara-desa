@@ -110,6 +110,8 @@ const elements = {
   hpPendamping: document.getElementById('hpPendamping'),
   namaOperator: document.getElementById('namaOperator'),
   hpOperator: document.getElementById('hpOperator'),
+  accountNumberText: document.getElementById('accountNumberText'),
+  copyAccountBtn: document.getElementById('copyAccountBtn'),
   buktiTransfer: document.getElementById('buktiTransfer'),
   dropzone: document.getElementById('dropzone'),
   filePreviewCard: document.getElementById('filePreviewCard'),
@@ -229,9 +231,49 @@ function bindEvents() {
     resetSelectedFile();
   });
 
+  if (elements.copyAccountBtn && elements.accountNumberText) {
+    elements.copyAccountBtn.addEventListener('click', handleCopyAccountNumber);
+  }
+
   setupDragAndDrop();
 
   elements.form.addEventListener('submit', handleFormSubmit);
+}
+
+async function handleCopyAccountNumber() {
+  const accountNumber = elements.accountNumberText.textContent.trim();
+  if (!accountNumber) return;
+
+  let copied = false;
+  if (navigator.clipboard && window.isSecureContext) {
+    try {
+      await navigator.clipboard.writeText(accountNumber);
+      copied = true;
+    } catch {
+      copied = false;
+    }
+  }
+
+  if (!copied) {
+    const tempInput = document.createElement('textarea');
+    tempInput.value = accountNumber;
+    tempInput.setAttribute('readonly', '');
+    tempInput.style.position = 'fixed';
+    tempInput.style.opacity = '0';
+    document.body.appendChild(tempInput);
+    tempInput.select();
+    copied = document.execCommand('copy');
+    document.body.removeChild(tempInput);
+  }
+
+  if (copied) {
+    elements.copyAccountBtn.textContent = 'Tersalin!';
+    elements.copyAccountBtn.classList.add('is-copied');
+    setTimeout(() => {
+      elements.copyAccountBtn.textContent = 'Salin';
+      elements.copyAccountBtn.classList.remove('is-copied');
+    }, 2000);
+  }
 }
 
 function setupDragAndDrop() {
