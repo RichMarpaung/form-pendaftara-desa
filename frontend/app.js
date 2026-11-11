@@ -5,7 +5,7 @@
  * Ganti nilai WEBHOOK_URL dengan URL Web App hasil deployment Google Apps Script.
  */
 const APP_CONFIG = {
-  WEBHOOK_URL: 'https://script.google.com/macros/s/AKfycbzQxeAG8y6VpztoprWMwaFI2UkQrYmEs55A3rBXeo2HgheoofyRwyY93xeCpXOm2UU/exec',
+  WEBHOOK_URL: 'https://script.google.com/macros/s/AKfycbygUQhf9zMCuhtQUjpz-ciXxG1Wg7y_i6H7g7b5edxveSqSEQAL-yLt6XYKdHCydPJc/exec',
   MAX_FILE_SIZE_BYTES: 5 * 1024 * 1024, // 5 MB
   ALLOWED_EXTENSIONS: ['jpg', 'jpeg', 'png', 'pdf'],
   ALLOWED_MIME_TYPES: ['image/jpeg', 'image/jpg', 'image/png', 'application/pdf'],

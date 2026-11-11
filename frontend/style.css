@@ -78,8 +78,31 @@ body {
 
 /* Header */
 .form-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   text-align: center;
   margin-bottom: 24px;
+}
+
+.brand-logo-wrap {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 0 14px;
+  padding: 10px 18px;
+  background-color: #f5f6f7;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 6px 20px -8px rgba(15, 23, 42, 0.12);
+}
+
+.brand-logo {
+  display: block;
+  width: min(320px, 76vw);
+  height: auto;
+  border-radius: 8px;
+  object-fit: contain;
 }
 
 .header-badge {
@@ -595,6 +618,15 @@ body {
 @media (max-width: 640px) {
   .page-wrapper {
     padding: 18px 12px 28px;
+  }
+
+  .brand-logo-wrap {
+    padding: 8px 12px;
+    border-radius: var(--radius-md);
+  }
+
+  .brand-logo {
+    width: min(260px, 80vw);
   }
 
   .card {
