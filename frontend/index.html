@@ -55,6 +55,24 @@
           Lengkapi data pemerintahan desa dan unggah bukti transfer pembayaran.
           Semua kolom bertanda <span class="required-mark">*</span> wajib diisi.
         </p>
+        <div class="deadline-banner" id="deadlineBanner">
+          <svg
+            class="deadline-icon"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+            <line x1="16" y1="2" x2="16" y2="6" />
+            <line x1="8" y1="2" x2="8" y2="6" />
+            <line x1="3" y1="10" x2="21" y2="10" />
+          </svg>
+          <span>Batas Waktu Pendaftaran: <strong>s.d. 20 November 2026</strong></span>
+        </div>
       </header>
 
       <section class="card" aria-labelledby="form-section-title">
@@ -105,21 +123,41 @@
               </div>
             </div>
 
-            <div class="form-group" data-field="kepalaDesa">
-              <label for="kepalaDesa" class="form-label">
-                Nama Kepala Desa <span class="required-mark" aria-hidden="true">*</span>
-              </label>
-              <input
-                type="text"
-                id="kepalaDesa"
-                name="kepalaDesa"
-                class="form-control"
-                placeholder="Masukkan nama lengkap Kepala Desa"
-                autocomplete="name"
-                maxlength="120"
-                required
-              />
-              <p class="field-error" id="kepalaDesaError" role="alert"></p>
+            <div class="form-grid">
+              <div class="form-group" data-field="kepalaDesa">
+                <label for="kepalaDesa" class="form-label">
+                  Nama Kepala Desa <span class="required-mark" aria-hidden="true">*</span>
+                </label>
+                <input
+                  type="text"
+                  id="kepalaDesa"
+                  name="kepalaDesa"
+                  class="form-control"
+                  placeholder="Masukkan nama lengkap Kepala Desa"
+                  autocomplete="name"
+                  maxlength="120"
+                  required
+                />
+                <p class="field-error" id="kepalaDesaError" role="alert"></p>
+              </div>
+
+              <div class="form-group" data-field="hpKepalaDesa">
+                <label for="hpKepalaDesa" class="form-label">
+                  No. HP Kepala Desa <span class="required-mark" aria-hidden="true">*</span>
+                </label>
+                <input
+                  type="tel"
+                  id="hpKepalaDesa"
+                  name="hpKepalaDesa"
+                  class="form-control"
+                  inputmode="tel"
+                  placeholder="Contoh: 081234567890"
+                  autocomplete="tel"
+                  maxlength="20"
+                  required
+                />
+                <p class="field-error" id="hpKepalaDesaError" role="alert"></p>
+              </div>
             </div>
 
             <div class="form-group" data-field="alamatKantor">
@@ -163,20 +201,40 @@
             <div class="form-grid">
               <div class="form-group" data-field="namaPendamping">
                 <label for="namaPendamping" class="form-label">
-                  Nama Pendamping <span class="required-mark" aria-hidden="true">*</span>
+                  Nama Pendamping (Sekretaris) <span class="required-mark" aria-hidden="true">*</span>
                 </label>
                 <input
                   type="text"
                   id="namaPendamping"
                   name="namaPendamping"
                   class="form-control"
-                  placeholder="Nama lengkap pendamping desa"
+                  placeholder="Nama lengkap pendamping (Sekretaris)"
                   maxlength="150"
                   required
                 />
                 <p class="field-error" id="namaPendampingError" role="alert"></p>
               </div>
 
+              <div class="form-group" data-field="hpPendamping">
+                <label for="hpPendamping" class="form-label">
+                  No. HP Pendamping (Sekretaris) <span class="required-mark" aria-hidden="true">*</span>
+                </label>
+                <input
+                  type="tel"
+                  id="hpPendamping"
+                  name="hpPendamping"
+                  class="form-control"
+                  inputmode="tel"
+                  placeholder="Contoh: 081234567890"
+                  autocomplete="tel"
+                  maxlength="20"
+                  required
+                />
+                <p class="field-error" id="hpPendampingError" role="alert"></p>
+              </div>
+            </div>
+
+            <div class="form-grid">
               <div class="form-group" data-field="namaOperator">
                 <label for="namaOperator" class="form-label">
                   Nama Operator <span class="required-mark" aria-hidden="true">*</span>
@@ -191,6 +249,24 @@
                   required
                 />
                 <p class="field-error" id="namaOperatorError" role="alert"></p>
+              </div>
+
+              <div class="form-group" data-field="hpOperator">
+                <label for="hpOperator" class="form-label">
+                  No. HP Operator <span class="required-mark" aria-hidden="true">*</span>
+                </label>
+                <input
+                  type="tel"
+                  id="hpOperator"
+                  name="hpOperator"
+                  class="form-control"
+                  inputmode="tel"
+                  placeholder="Contoh: 081234567890"
+                  autocomplete="tel"
+                  maxlength="20"
+                  required
+                />
+                <p class="field-error" id="hpOperatorError" role="alert"></p>
               </div>
             </div>
           </fieldset>
@@ -233,7 +309,7 @@
                     <span class="dropzone-cta">Pilih file</span> atau seret dan lepas di sini
                   </p>
                   <p class="dropzone-subtitle">
-                    Format didukung: JPG, JPEG, PNG, PDF &bull; Maksimal 5 MB
+                    Format didukung: JPG, JPEG, PNG, PDF &bull; Maksimal 10 MB
                   </p>
                 </div>
               </div>

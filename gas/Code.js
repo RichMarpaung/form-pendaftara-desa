@@ -4,7 +4,7 @@ const GAS_CONFIG = {
   // Opsional: isi ID folder Google Drive tujuan; jika kosong akan otomatis memakai/membuat folder DEFAULT_FOLDER_NAME.
   DRIVE_FOLDER_ID: '',
   DEFAULT_FOLDER_NAME: 'Bukti Transfer Pendaftaran Desa - Mamuju Tengah',
-  MAX_FILE_SIZE_BYTES: 5 * 1024 * 1024,
+  MAX_FILE_SIZE_BYTES: 10 * 1024 * 1024,
   ALLOWED_MIME_TYPES: ['image/jpeg', 'image/png', 'application/pdf'],
   LOCK_TIMEOUT_MS: 30000,
   TIMEZONE: 'Asia/Makassar',
@@ -15,14 +15,18 @@ const SHEET_HEADERS = [
   'Kecamatan',
   'Nama Desa',
   'Nama Kepala Desa',
+  'No. HP Kepala Desa',
   'Alamat Kantor Desa',
   'Email Resmi Desa',
-  'Nama Pendamping',
+  'Nama Pendamping (Sekretaris)',
+  'No. HP Pendamping (Sekretaris)',
   'Nama Operator',
+  'No. HP Operator',
   'Link File Google Drive',
 ];
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+const PHONE_REGEX = /^(?:\+62|62|0)[2-9][0-9]{7,12}$/;
 
 /**
  * Endpoint GET untuk memverifikasi status aktif Web App.
@@ -70,10 +74,13 @@ function doPost(e) {
       validatedData.kecamatan,
       validatedData.namaDesa,
       validatedData.kepalaDesa,
+      formatPhoneForSheet_(validatedData.hpKepalaDesa),
       validatedData.alamatKantor,
       validatedData.emailDesa,
       validatedData.namaPendamping,
+      formatPhoneForSheet_(validatedData.hpPendamping),
       validatedData.namaOperator,
+      formatPhoneForSheet_(validatedData.hpOperator),
       fileUrl,
     ]);
 
@@ -121,23 +128,35 @@ function validatePayload_(payload) {
   const kecamatan = sanitizeText_(payload.kecamatan);
   const namaDesa = sanitizeText_(payload.namaDesa);
   const kepalaDesa = sanitizeText_(payload.kepalaDesa);
+  const hpKepalaDesa = sanitizePhone_(payload.hpKepalaDesa);
   const alamatKantor = sanitizeText_(payload.alamatKantor);
   const emailDesa = sanitizeText_(payload.emailDesa);
   const namaPendamping = sanitizeText_(payload.namaPendamping);
+  const hpPendamping = sanitizePhone_(payload.hpPendamping);
   const namaOperator = sanitizeText_(payload.namaOperator);
+  const hpOperator = sanitizePhone_(payload.hpOperator);
 
   if (!kecamatan) throw new Error('Kecamatan wajib diisi.');
   if (!namaDesa) throw new Error('Nama Desa wajib diisi.');
   if (!kepalaDesa) throw new Error('Nama Kepala Desa wajib diisi.');
+  if (!hpKepalaDesa || !PHONE_REGEX.test(hpKepalaDesa)) {
+    throw new Error('Format No. HP Kepala Desa tidak valid.');
+  }
   if (!alamatKantor) throw new Error('Alamat Kantor Desa wajib diisi.');
   if (!emailDesa || !EMAIL_REGEX.test(emailDesa)) {
     throw new Error('Format Email Resmi Desa tidak valid.');
   }
   if (!namaPendamping) {
-    throw new Error('Nama Pendamping wajib diisi.');
+    throw new Error('Nama Pendamping (Sekretaris) wajib diisi.');
+  }
+  if (!hpPendamping || !PHONE_REGEX.test(hpPendamping)) {
+    throw new Error('Format No. HP Pendamping (Sekretaris) tidak valid.');
   }
   if (!namaOperator) {
     throw new Error('Nama Operator wajib diisi.');
+  }
+  if (!hpOperator || !PHONE_REGEX.test(hpOperator)) {
+    throw new Error('Format No. HP Operator tidak valid.');
   }
 
   const file = payload.file;
@@ -160,17 +179,20 @@ function validatePayload_(payload) {
     throw new Error('File tidak valid atau berukuran 0 byte.');
   }
   if (decodedBytes.length > GAS_CONFIG.MAX_FILE_SIZE_BYTES) {
-    throw new Error('Ukuran file melebihi batas maksimal 5 MB.');
+    throw new Error('Ukuran file melebihi batas maksimal 10 MB.');
   }
 
   return {
     kecamatan: kecamatan,
     namaDesa: namaDesa,
     kepalaDesa: kepalaDesa,
+    hpKepalaDesa: hpKepalaDesa,
     alamatKantor: alamatKantor,
     emailDesa: emailDesa,
     namaPendamping: namaPendamping,
+    hpPendamping: hpPendamping,
     namaOperator: namaOperator,
+    hpOperator: hpOperator,
     fileBytes: decodedBytes,
     fileMimeType: normalizedMime,
     originalFileName: String(file.name),
@@ -265,6 +287,15 @@ function normalizeMimeType_(mimeType, fileName) {
 
 function sanitizeText_(value) {
   return typeof value === 'string' ? value.trim() : '';
+}
+
+function sanitizePhone_(value) {
+  return typeof value === 'string' ? value.trim().replace(/[\s\-().]/g, '') : '';
+}
+
+function formatPhoneForSheet_(phone) {
+  // Awalan apostrof menjaga angka 0 di depan dan simbol + agar tetap tersimpan sebagai teks di Sheets.
+  return phone ? `'${phone}` : '';
 }
 
 function sanitizeFileName_(name) {

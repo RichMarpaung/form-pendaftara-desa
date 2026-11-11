@@ -5,11 +5,11 @@
  * Ganti nilai WEBHOOK_URL dengan URL Web App hasil deployment Google Apps Script.
  */
 const APP_CONFIG = {
-  WEBHOOK_URL: 'https://script.google.com/macros/s/AKfycbygUQhf9zMCuhtQUjpz-ciXxG1Wg7y_i6H7g7b5edxveSqSEQAL-yLt6XYKdHCydPJc/exec',
-  MAX_FILE_SIZE_BYTES: 5 * 1024 * 1024, // 5 MB
+  WEBHOOK_URL: 'https://script.google.com/macros/s/AKfycbxa8gjBA33s9U4Oo92kYvOOcy3JEDsO-crrFVghQsJuOv8xUpvQJ-MgsQhQzR2M7q6k/exec',
+  MAX_FILE_SIZE_BYTES: 10 * 1024 * 1024, // 10 MB
   ALLOWED_EXTENSIONS: ['jpg', 'jpeg', 'png', 'pdf'],
   ALLOWED_MIME_TYPES: ['image/jpeg', 'image/jpg', 'image/png', 'application/pdf'],
-  REQUEST_TIMEOUT_MS: 45000,
+  REQUEST_TIMEOUT_MS: 90000,
 };
 
 /**
@@ -83,6 +83,13 @@ const WILAYAH_MAMUJU_TENGAH = {
 };
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+const PHONE_PATTERN = /^(?:\+62|62|0)[2-9][0-9]{7,12}$/;
+
+const PHONE_FIELDS = [
+  { key: 'hpKepalaDesa', label: 'No. HP Kepala Desa' },
+  { key: 'hpPendamping', label: 'No. HP Pendamping (Sekretaris)' },
+  { key: 'hpOperator', label: 'No. HP Operator' },
+];
 
 const state = {
   selectedFile: null,
@@ -97,10 +104,13 @@ const elements = {
   namaDesa: document.getElementById('namaDesa'),
   desaCountHint: document.getElementById('desaCountHint'),
   kepalaDesa: document.getElementById('kepalaDesa'),
+  hpKepalaDesa: document.getElementById('hpKepalaDesa'),
   alamatKantor: document.getElementById('alamatKantor'),
   emailDesa: document.getElementById('emailDesa'),
   namaPendamping: document.getElementById('namaPendamping'),
+  hpPendamping: document.getElementById('hpPendamping'),
   namaOperator: document.getElementById('namaOperator'),
+  hpOperator: document.getElementById('hpOperator'),
   buktiTransfer: document.getElementById('buktiTransfer'),
   dropzone: document.getElementById('dropzone'),
   filePreviewCard: document.getElementById('filePreviewCard'),
@@ -198,6 +208,22 @@ function bindEvents() {
     if (value && !EMAIL_PATTERN.test(value)) {
       setFieldError('emailDesa', 'Format email tidak valid. Contoh: desa@domain.go.id');
     }
+  });
+
+  PHONE_FIELDS.forEach(({ key, label }) => {
+    const input = elements[key];
+    input.addEventListener('input', () => {
+      const normalized = normalizePhone(input.value);
+      if (!normalized || PHONE_PATTERN.test(normalized)) {
+        clearFieldError(key);
+      }
+    });
+    input.addEventListener('blur', () => {
+      const normalized = normalizePhone(input.value);
+      if (normalized && !PHONE_PATTERN.test(normalized)) {
+        setFieldError(key, `Format ${label} tidak valid. Gunakan angka 08... atau +628...`);
+      }
+    });
   });
 
   elements.buktiTransfer.addEventListener('change', (event) => {
@@ -298,7 +324,7 @@ function validateFile(file) {
   }
 
   if (file.size > APP_CONFIG.MAX_FILE_SIZE_BYTES) {
-    return `Ukuran file (${formatFileSize(file.size)}) melebihi batas maksimal 5 MB.`;
+    return `Ukuran file (${formatFileSize(file.size)}) melebihi batas maksimal 10 MB.`;
   }
 
   return '';
@@ -383,15 +409,22 @@ function clearFieldError(fieldName) {
   }
 }
 
+function normalizePhone(rawValue) {
+  return rawValue.trim().replace(/[\s\-().]/g, '');
+}
+
 function clearAllFieldErrors() {
   [
     'kecamatan',
     'namaDesa',
     'kepalaDesa',
+    'hpKepalaDesa',
     'alamatKantor',
     'emailDesa',
     'namaPendamping',
+    'hpPendamping',
     'namaOperator',
+    'hpOperator',
     'buktiTransfer',
   ].forEach(clearFieldError);
 }
@@ -458,7 +491,7 @@ function validateFormFields() {
     markInvalid(
       'namaPendamping',
       elements.namaPendamping,
-      'Nama Pendamping wajib diisi (minimal 3 karakter).'
+      'Nama Pendamping (Sekretaris) wajib diisi (minimal 3 karakter).'
     );
   }
 
@@ -469,6 +502,20 @@ function validateFormFields() {
       'Nama Operator wajib diisi (minimal 3 karakter).'
     );
   }
+
+  PHONE_FIELDS.forEach(({ key, label }) => {
+    const input = elements[key];
+    const normalized = normalizePhone(input.value);
+    if (!normalized) {
+      markInvalid(key, input, `${label} wajib diisi.`);
+    } else if (!PHONE_PATTERN.test(normalized)) {
+      markInvalid(
+        key,
+        input,
+        `Format ${label} tidak valid. Contoh: 081234567890`
+      );
+    }
+  });
 
   const fileError = validateFile(state.selectedFile);
   if (fileError) {
@@ -695,10 +742,13 @@ async function handleFormSubmit(event) {
       kecamatan: submittedKecamatan,
       namaDesa: submittedDesa,
       kepalaDesa: elements.kepalaDesa.value.trim(),
+      hpKepalaDesa: normalizePhone(elements.hpKepalaDesa.value),
       alamatKantor: elements.alamatKantor.value.trim(),
       emailDesa: elements.emailDesa.value.trim(),
       namaPendamping: elements.namaPendamping.value.trim(),
+      hpPendamping: normalizePhone(elements.hpPendamping.value),
       namaOperator: elements.namaOperator.value.trim(),
+      hpOperator: normalizePhone(elements.hpOperator.value),
       file: {
         name: file.name,
         mimeType: resolveMimeType(file),

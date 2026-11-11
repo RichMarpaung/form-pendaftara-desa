@@ -8,7 +8,7 @@ Aplikasi formulir pendaftaran desa berbasis web yang terintegrasi otomatis ke **
 ├── frontend/
 │   ├── index.html   # Halaman utama formulir pendaftaran
 │   ├── style.css    # Styling responsif dan state validasi/loading
-│   └── app.js       # Data 5 Kecamatan (54 Desa), validasi file 5 MB, Base64, & fetch POST
+│   └── app.js       # Data 5 Kecamatan (54 Desa), validasi file 10 MB, Base64, & fetch POST
 ├── gas/
 │   └── Code.js      # Webhook doPost (LockService, upload Drive, appendRow Sheets)
 └── README.md
