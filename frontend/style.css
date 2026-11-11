@@ -386,11 +386,12 @@ body {
 
 /* Bank Transfer Info Card */
 .bank-info-card {
-  margin-bottom: 24px;
-  padding: 16px 18px;
-  border-radius: var(--radius-md);
+  margin-bottom: 20px;
+  padding: 20px 24px;
+  border-radius: var(--radius-lg);
   background-color: var(--brand-primary-soft);
   border: 1px solid var(--brand-primary-border);
+  box-shadow: var(--shadow-card);
 }
 
 .bank-info-header {
@@ -774,6 +775,11 @@ body {
 
   .btn-remove-file {
     width: 100%;
+  }
+
+  .bank-info-card {
+    padding: 16px;
+    border-radius: var(--radius-md);
   }
 
   .bank-info-row {
