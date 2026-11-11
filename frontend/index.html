@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta
+    name="description"
+    content="Formulir resmi pendaftaran desa Kabupaten Mamuju Tengah dengan integrasi otomatis ke Google Sheets dan Google Drive."
+  />
+  <title>Formulir Pendaftaran Desa — Kabupaten Mamuju Tengah</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"
+    rel="stylesheet"
+  />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="page-wrapper">
+    <main class="container">
+      <header class="form-header">
+        <div class="header-badge">
+          <svg
+            class="header-icon"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <path d="M3 21h18" />
+            <path d="M5 21V7l7-4 7 4v14" />
+            <path d="M9 21v-6h6v6" />
+            <path d="M9 10h.01" />
+            <path d="M15 10h.01" />
+          </svg>
+          <span>Kabupaten Mamuju Tengah</span>
+        </div>
+        <h1 class="form-title">Formulir Pendaftaran Desa</h1>
+        <p class="form-subtitle">
+          Lengkapi data pemerintahan desa dan unggah bukti transfer pembayaran.
+          Semua kolom bertanda <span class="required-mark">*</span> wajib diisi.
+        </p>
+      </header>
+
+      <section class="card" aria-labelledby="form-section-title">
+        <h2 id="form-section-title" class="sr-only">Isian Data Pendaftaran Desa</h2>
+
+        <div
+          id="statusAlert"
+          class="alert is-hidden"
+          role="status"
+          aria-live="polite"
+        ></div>
+
+        <form id="registrationForm" novalidate>
+          <!-- Bagian 1: Identitas Wilayah & Pemerintahan -->
+          <fieldset class="form-section">
+            <legend class="section-legend">1. Wilayah &amp; Pemerintahan Desa</legend>
+
+            <div class="form-grid">
+              <div class="form-group" data-field="kecamatan">
+                <label for="kecamatan" class="form-label">
+                  Kecamatan <span class="required-mark" aria-hidden="true">*</span>
+                </label>
+                <div class="select-wrapper">
+                  <select id="kecamatan" name="kecamatan" class="form-control" required>
+                    <option value="">Pilih Kecamatan</option>
+                  </select>
+                </div>
+                <p class="field-error" id="kecamatanError" role="alert"></p>
+              </div>
+
+              <div class="form-group" data-field="namaDesa">
+                <label for="namaDesa" class="form-label">
+                  Nama Desa <span class="required-mark" aria-hidden="true">*</span>
+                </label>
+                <div class="select-wrapper">
+                  <select
+                    id="namaDesa"
+                    name="namaDesa"
+                    class="form-control"
+                    disabled
+                    required
+                  >
+                    <option value="">Pilih Kecamatan terlebih dahulu</option>
+                  </select>
+                </div>
+                <p class="field-hint" id="desaCountHint">5 Kecamatan, 54 Desa terdaftar</p>
+                <p class="field-error" id="namaDesaError" role="alert"></p>
+              </div>
+            </div>
+
+            <div class="form-group" data-field="kepalaDesa">
+              <label for="kepalaDesa" class="form-label">
+                Nama Kepala Desa <span class="required-mark" aria-hidden="true">*</span>
+              </label>
+              <input
+                type="text"
+                id="kepalaDesa"
+                name="kepalaDesa"
+                class="form-control"
+                placeholder="Masukkan nama lengkap Kepala Desa"
+                autocomplete="name"
+                maxlength="120"
+                required
+              />
+              <p class="field-error" id="kepalaDesaError" role="alert"></p>
+            </div>
+
+            <div class="form-group" data-field="alamatKantor">
+              <label for="alamatKantor" class="form-label">
+                Alamat Kantor Desa <span class="required-mark" aria-hidden="true">*</span>
+              </label>
+              <textarea
+                id="alamatKantor"
+                name="alamatKantor"
+                class="form-control form-textarea"
+                rows="3"
+                placeholder="Contoh: Jl. Poros Desa No. 12, Dusun Harapan, Kode Pos 91563"
+                maxlength="400"
+                required
+              ></textarea>
+              <p class="field-error" id="alamatKantorError" role="alert"></p>
+            </div>
+          </fieldset>
+
+          <!-- Bagian 2: Kontak & Penanggung Jawab -->
+          <fieldset class="form-section">
+            <legend class="section-legend">2. Kontak &amp; Penanggung Jawab</legend>
+
+            <div class="form-group" data-field="emailDesa">
+              <label for="emailDesa" class="form-label">
+                Email Resmi Desa <span class="required-mark" aria-hidden="true">*</span>
+              </label>
+              <input
+                type="email"
+                id="emailDesa"
+                name="emailDesa"
+                class="form-control"
+                placeholder="contoh: pemdes.tobadak@mamujutengahkab.go.id"
+                autocomplete="email"
+                maxlength="150"
+                required
+              />
+              <p class="field-error" id="emailDesaError" role="alert"></p>
+            </div>
+
+            <div class="form-grid">
+              <div class="form-group" data-field="namaPendamping">
+                <label for="namaPendamping" class="form-label">
+                  Nama Pendamping <span class="required-mark" aria-hidden="true">*</span>
+                </label>
+                <input
+                  type="text"
+                  id="namaPendamping"
+                  name="namaPendamping"
+                  class="form-control"
+                  placeholder="Nama lengkap pendamping desa"
+                  maxlength="150"
+                  required
+                />
+                <p class="field-error" id="namaPendampingError" role="alert"></p>
+              </div>
+
+              <div class="form-group" data-field="namaOperator">
+                <label for="namaOperator" class="form-label">
+                  Nama Operator <span class="required-mark" aria-hidden="true">*</span>
+                </label>
+                <input
+                  type="text"
+                  id="namaOperator"
+                  name="namaOperator"
+                  class="form-control"
+                  placeholder="Nama lengkap operator desa"
+                  maxlength="150"
+                  required
+                />
+                <p class="field-error" id="namaOperatorError" role="alert"></p>
+              </div>
+            </div>
+          </fieldset>
+
+          <!-- Bagian 3: Bukti Pembayaran -->
+          <fieldset class="form-section">
+            <legend class="section-legend">3. Bukti Transfer Pembayaran</legend>
+
+            <div class="form-group" data-field="buktiTransfer">
+              <label for="buktiTransfer" class="form-label">
+                Unggah Bukti Transfer <span class="required-mark" aria-hidden="true">*</span>
+              </label>
+
+              <div id="dropzone" class="dropzone">
+                <input
+                  type="file"
+                  id="buktiTransfer"
+                  name="buktiTransfer"
+                  class="file-input"
+                  accept=".jpg,.jpeg,.png,.pdf,image/jpeg,image/png,application/pdf"
+                  required
+                />
+                <div class="dropzone-content">
+                  <div class="dropzone-icon-wrap" aria-hidden="true">
+                    <svg
+                      class="dropzone-icon"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                      <polyline points="17 8 12 3 7 8" />
+                      <line x1="12" y1="3" x2="12" y2="15" />
+                    </svg>
+                  </div>
+                  <p class="dropzone-title">
+                    <span class="dropzone-cta">Pilih file</span> atau seret dan lepas di sini
+                  </p>
+                  <p class="dropzone-subtitle">
+                    Format didukung: JPG, JPEG, PNG, PDF &bull; Maksimal 5 MB
+                  </p>
+                </div>
+              </div>
+
+              <div id="filePreviewCard" class="file-preview is-hidden" aria-live="polite">
+                <div class="file-preview-thumb" id="filePreviewThumb"></div>
+                <div class="file-preview-info">
+                  <p class="file-preview-name" id="filePreviewName"></p>
+                  <p class="file-preview-meta" id="filePreviewMeta"></p>
+                </div>
+                <button
+                  type="button"
+                  id="removeFileBtn"
+                  class="btn-remove-file"
+                  aria-label="Hapus file terpilih"
+                >
+                  Hapus
+                </button>
+              </div>
+
+              <p class="field-error" id="buktiTransferError" role="alert"></p>
+            </div>
+          </fieldset>
+
+          <div class="form-actions">
+            <button type="submit" id="submitBtn" class="btn-submit">
+              <span class="btn-spinner" aria-hidden="true"></span>
+              <span class="btn-text">Kirim Pendaftaran Desa</span>
+            </button>
+          </div>
+        </form>
+      </section>
+
+      <footer class="page-footer">
+        <p>Sistem Pendaftaran Desa &bull; Kabupaten Mamuju Tengah</p>
+      </footer>
+    </main>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
